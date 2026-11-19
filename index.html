@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0e1320">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
+<title>META — Poli</title>
+<style>
+:root{--bg:#0e1320;--card:#161d2f;--card2:#1c2540;--line:#26314f;--tx:#e8ecf7;--mut:#8b96b5;--acc:#f5b942;--ok:#4ade80;--bad:#fb7185;--r:16px}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0}
+body{background:var(--bg);color:var(--tx);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding-bottom:calc(82px + env(safe-area-inset-bottom))}
+#app{max-width:560px;margin:0 auto;padding:0 16px}
+button{font:inherit;color:inherit;cursor:pointer}
+input,select,textarea{font:inherit;color:var(--tx);background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:11px 12px;width:100%}
+textarea{min-height:110px;resize:vertical}
+label{display:block;font-size:13px;color:var(--mut);margin:12px 0 5px}
+h2{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);margin:26px 0 10px;font-weight:600}
+.hdr{position:sticky;top:0;background:linear-gradient(var(--bg) 85%,transparent);padding:calc(14px + env(safe-area-inset-top)) 0 14px;z-index:5}
+.hrow{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.rank{font-size:20px;font-weight:700;letter-spacing:-.01em}
+.rank small{font-size:13px;color:var(--mut);font-weight:500;margin-left:6px}
+.bal{font-size:14px;color:var(--acc);font-weight:600;white-space:nowrap}
+.bar{height:8px;border-radius:99px;background:var(--card2);overflow:hidden;margin-top:9px}
+.bar>i{display:block;height:100%;background:linear-gradient(90deg,#f5b942,#f59e0b);border-radius:99px;transition:width .4s}
+.bar.t>i{background:linear-gradient(90deg,#5eead4,#2dd4bf)}
+.sub{font-size:12px;color:var(--mut);margin-top:6px;display:flex;justify-content:space-between}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px}
+.card+.card{margin-top:10px}
+.exam{display:flex;gap:14px;align-items:center}
+.exam .n{font-size:34px;font-weight:800;line-height:1;color:var(--acc);min-width:54px;text-align:center}
+.exam .n small{display:block;font-size:11px;font-weight:600;color:var(--mut);letter-spacing:.06em;text-transform:uppercase;margin-top:3px}
+.exam.hot .n{color:var(--bad)}
+.week{display:flex;gap:6px;margin-top:10px}
+.week div{flex:1;text-align:center;font-size:11px;color:var(--mut)}
+.week b{display:block;width:100%;aspect-ratio:1;max-width:38px;margin:4px auto 0;border-radius:10px;background:var(--card2);border:1px solid var(--line)}
+.week .on b{background:var(--ok);border-color:var(--ok)}
+.week .td b{outline:2px solid var(--acc);outline-offset:2px}
+.mc{display:flex;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--c);border-radius:var(--r);padding:12px}
+.mc+.mc{margin-top:10px}
+.mc.done{opacity:.6}
+.mc.done .mt{text-decoration:line-through}
+.chk{flex:none;width:30px;height:30px;border-radius:50%;border:2px solid var(--mut);background:transparent;padding:0;display:grid;place-items:center;font-size:16px;color:#0e1320}
+.done .chk{background:var(--ok);border-color:var(--ok)}
+.mb{flex:1;min-width:0}
+.mt{font-weight:600}
+.ms{font-size:12px;color:var(--mut);margin-top:4px;display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center}
+.chip{background:var(--card2);border-radius:99px;padding:2px 8px;color:var(--tx);font-size:11px;font-weight:600}
+.ib{flex:none;background:none;border:0;color:var(--mut);padding:6px 8px;font-size:15px;border-radius:8px}
+.ib:active{background:var(--card2)}
+.btn{background:var(--acc);color:#1a1405;border:0;border-radius:12px;padding:12px 16px;font-weight:700;width:100%}
+.btn.sec{background:var(--card2);color:var(--tx);border:1px solid var(--line)}
+.btn.sm{width:auto;padding:8px 12px;font-size:14px}
+.btn:disabled{opacity:.4}
+.btn.danger{background:transparent;color:var(--bad);border:1px solid var(--bad)}
+.row{display:flex;gap:10px}
+.row>*{flex:1}
+.banner{background:linear-gradient(135deg,#3b1d2a,#2a1d3b);border:1px solid #5a2a46;border-radius:var(--r);padding:14px;margin-bottom:12px}
+.banner b{display:block;margin-bottom:4px}
+.empty{color:var(--mut);text-align:center;padding:26px 10px;font-size:14px}
+.nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;padding:6px 6px calc(6px + env(safe-area-inset-bottom));z-index:10}
+.nav button{flex:1;background:none;border:0;padding:8px 2px;color:var(--mut);font-size:11px;display:flex;flex-direction:column;align-items:center;gap:3px;border-radius:10px}
+.nav button span{font-size:20px;line-height:1}
+.nav button.on{color:var(--acc)}
+.sheet-bg{position:fixed;inset:0;background:rgba(5,8,16,.65);z-index:20;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--card);border-top-left-radius:22px;border-top-right-radius:22px;width:100%;max-width:560px;padding:18px 16px calc(20px + env(safe-area-inset-bottom));max-height:88vh;overflow:auto;border:1px solid var(--line)}
+.sheet h3{margin:0 0 4px;font-size:18px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(92px + env(safe-area-inset-bottom));background:#f5b942;color:#1a1405;padding:10px 16px;border-radius:99px;font-weight:700;z-index:30;box-shadow:0 8px 30px rgba(0,0,0,.4);animation:pop .25s}
+.toast.lv{background:#4ade80}
+@keyframes pop{from{opacity:0;transform:translate(-50%,10px)}}
+.topic{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line)}
+.topic .st{flex:none;width:26px;height:26px;border-radius:50%;border:2px solid var(--mut);background:none;padding:0;font-size:13px;display:grid;place-items:center}
+.topic .st.s1{border-color:var(--acc);color:var(--acc)}
+.topic .st.s2{background:var(--ok);border-color:var(--ok);color:#0e1320}
+.topic span.n{flex:1}
+.kv{display:flex;justify-content:space-between;font-size:13px;color:var(--mut);margin-top:8px}
+.rw{display:flex;gap:12px;align-items:center}
+.rw .c{font-weight:800;color:var(--acc);min-width:64px;text-align:right}
+pre{white-space:pre-wrap;word-break:break-word;background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:12px;font-size:12px;max-height:200px;overflow:auto;margin:8px 0 0}
+.rules li{margin:6px 0;font-size:14px;color:var(--mut)}
+.rules b{color:var(--tx)}
+details summary{cursor:pointer;color:var(--mut);font-size:14px;padding:6px 0}
+.pv{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line)}
+.pv input{width:auto;margin-top:4px}
+.err{color:var(--bad);font-size:13px;margin-top:8px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<nav class="nav" id="nav"></nav>
+<div id="sheet"></div>
+
+<script>
+'use strict';
+const KEY = 'meta-poli-v1';
+const $ = (s, el = document) => el.querySelector(s);
+const uid = () => Math.random().toString(36).slice(2, 9);
+const pad = n => String(n).padStart(2, '0');
+const dkey = (d = new Date()) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const parseD = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+const daysUntil = s => Math.round((parseD(s) - parseD(dkey())) / 864e5);
+const fmtD = s => parseD(s).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' }).replace('.', '');
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+/* ---------- estado ---------- */
+function seed() {
+  const c = (code, name, exam, label, color, topics = []) => ({ id: uid(), code, name, exam, examLabel: label, color, topics: topics.map(n => ({ id: uid(), name: n, status: 0 })) });
+  const courses = [
+    c('PRO3200', 'Estatística', '2026-12-02', 'P3', '#5eead4', ['ANOVA', 'Regressão linear', 'Correlação']),
+    c('PCC3260', 'Física das Construções', '2026-12-01', 'P3', '#fbbf24'),
+    c('MAT2456', 'Cálculo IV', '', 'P3 (EDO)', '#a78bfa', ['Equações diferenciais ordinárias']),
+    c('PTR3421', 'Transporte sobre Trilhos', '', 'Prova', '#fb7185'),
+    c('PTR3322', 'Pavimentação Rodoviária', '', 'Prova', '#60a5fa')
+  ];
+  const mk = (title, code, min) => ({ id: uid(), title, courseId: courses.find(x => x.code === code).id, topicId: null, min, status: 'today', planDate: dkey(), doneAt: null, realMin: 0, xp: 0 });
+  return {
+    v: 1, courses,
+    missions: [
+      mk('Ler a explicação básica de ANOVA (um fator) e refazer 1 exemplo à mão', 'PRO3200', 30),
+      mk('Abrir slides e listas da PCC3260 e anotar aqui os tópicos que caem na P3', 'PCC3260', 20),
+      mk('Abrir a lista de EDO e resolver o 1º exercício básico', 'MAT2456', 20)
+    ],
+    rewards: [
+      { id: uid(), name: 'Café ou sorvete fora', cost: 120 },
+      { id: uid(), name: 'Saída de bike sem destino', cost: 150 },
+      { id: uid(), name: 'Jantar fora', cost: 400 },
+      { id: uid(), name: 'Tarde livre, sem culpa', cost: 600 },
+      { id: uid(), name: 'Livro novo', cost: 900 }
+    ],
+    redeemed: [], bonus: [], settings: { dailyGoal: 3, weeklyGoal: 5 }
+  };
+}
+function load() { try { const r = localStorage.getItem(KEY); if (r) { const s = JSON.parse(r); if (s && s.v === 1) return s; } } catch (e) {} return seed(); }
+let S = load();
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { toast('Sem permissão para salvar neste navegador'); } }
+
+/* ---------- derivados ---------- */
+const course = id => S.courses.find(c => c.id === id);
+const done = () => S.missions.filter(m => m.status === 'done');
+const totalXP = () => done().reduce((a, m) => a + m.xp, 0) + S.bonus.reduce((a, b) => a + b.xp, 0);
+const spentXP = () => S.redeemed.reduce((a, r) => a + r.cost, 0);
+const need = L => 150 * (L - 1) * L;
+function levelInfo(xp) { let L = 1; while (xp >= need(L + 1)) L++; return { L, base: need(L), next: need(L + 1) }; }
+const RANKS = [[1, 'Bixo'], [3, 'Veterano'], [5, 'Monitor'], [7, 'Estagiário'], [9, 'Engenheiro Júnior'], [11, 'Pleno'], [14, 'Sênior'], [18, 'Mestre']];
+const rankOf = L => RANKS.filter(r => L >= r[0]).pop()[1];
+const doneOn = k => done().filter(m => dkey(new Date(m.doneAt)) === k);
+const queue = () => S.missions.filter(m => m.status === 'today');
+const bank = () => S.missions.filter(m => m.status === 'backlog');
+function nextExam() {
+  const l = S.courses.filter(c => c.exam && daysUntil(c.exam) >= 0).sort((a, b) => a.exam.localeCompare(b.exam));
+  return l[0] || null;
+}
+function lastActiveDays() {
+  const d = done(); if (!d.length) return null;
+  const last = d.map(m => m.doneAt).sort().pop();
+  return Math.round((parseD(dkey()) - parseD(dkey(new Date(last)))) / 864e5);
+}
+function weekDays() {
+  const s = new Date(); s.setDate(s.getDate() - s.getDay());
+  const act = new Set(done().map(m => dkey(new Date(m.doneAt))));
+  const L = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
+  return Array.from({ length: 7 }, (_, i) => { const d = new Date(s); d.setDate(s.getDate() + i); const k = dkey(d); return { l: L[i], on: act.has(k), td: k === dkey() }; });
+}
+
+/* ---------- ações de domínio ---------- */
+function addBonus(key, label, xp) {
+  if (S.bonus.some(b => b.key === key)) return 0;
+  S.bonus.push({ key, label, xp, at: new Date().toISOString() }); return xp;
+}
+function completeMission(id, realMin) {
+  const m = S.missions.find(x => x.id === id); if (!m) return;
+  const before = levelInfo(totalXP()).L;
+  m.status = 'done'; m.doneAt = new Date().toISOString(); m.realMin = realMin; m.xp = realMin;
+  let gain = realMin;
+  if (m.comeback) gain += addBonus('comeback-' + m.id, 'Retomada', 20);
+  const today = dkey();
+  if (doneOn(today).length === S.settings.dailyGoal) gain += addBonus('daily-' + today, 'Meta do dia', 30);
+  if (m.topicId) { const t = topicOf(m); if (t && t.status === 0) t.status = 1; }
+  save();
+  const after = levelInfo(totalXP()).L;
+  toast(`+${gain} XP`);
+  if (after > before) setTimeout(() => toast(`Nível ${after}: ${rankOf(after)}`, true), 1300);
+  render();
+}
+function undoMission(id) {
+  const m = S.missions.find(x => x.id === id); if (!m) return;
+  const k = dkey(new Date(m.doneAt));
+  m.status = 'today'; m.doneAt = null; m.xp = 0; m.realMin = 0;
+  S.bonus = S.bonus.filter(b => b.key !== 'comeback-' + id);
+  if (doneOn(k).length < S.settings.dailyGoal) S.bonus = S.bonus.filter(b => b.key !== 'daily-' + k);
+  save(); render();
+}
+function topicOf(m) { const c = course(m.courseId); return c && c.topics.find(t => t.id === m.topicId); }
+function slotsUsed() { return queue().length + doneOn(dkey()).length; }
+function sendToToday(id) {
+  if (slotsUsed() >= S.settings.dailyGoal && !confirm(`Você já tem ${S.settings.dailyGoal} missões hoje. Missão demais vira missão nenhuma. Adicionar mesmo assim?`)) return;
+  const m = S.missions.find(x => x.id === id); m.status = 'today'; m.planDate = dkey(); save(); render();
+}
+function startComeback() {
+  if (queue().some(m => m.comeback)) { toast('Sua missão de retomada já está na fila'); tab = 'hoje'; render(); return; }
+  const c = nextExam() || S.courses[0];
+  if (!c) { toast('Cadastre uma matéria primeiro'); return; }
+  S.missions.push({ id: uid(), title: `Retomada: abrir ${c.code} e resolver 1 exercício básico`, courseId: c.id, topicId: null, min: 15, status: 'today', planDate: dkey(), doneAt: null, realMin: 0, xp: 0, comeback: true });
+  save(); tab = 'hoje'; render(); toast('15 minutos. Só isso.');
+}
+
+/* ---------- UI ---------- */
+let tab = 'hoje', openCourse = null, parsed = null, aiErr = '';
+const TABS = [['hoje', '🎯', 'Hoje'], ['banco', '🗂️', 'Banco'], ['materias', '📚', 'Matérias'], ['loja', '🎁', 'Loja'], ['mais', '✨', 'Mais']];
+
+function header() {
+  const xp = totalXP(), li = levelInfo(xp), pct = Math.round((xp - li.base) / (li.next - li.base) * 100);
+  return `<div class="hdr"><div class="hrow"><div class="rank">${rankOf(li.L)}<small>nível ${li.L}</small></div><div class="bal">⚡ ${xp - spentXP()} XP livres</div></div>
+  <div class="bar"><i style="width:${pct}%"></i></div><div class="sub"><span>${xp - li.base} / ${li.next - li.base} XP</span><span>próx.: ${rankOf(li.L + 1) !== rankOf(li.L) ? rankOf(li.L + 1) : 'nível ' + (li.L + 1)}</span></div></div>`;
+}
+function chips(m) {
+  const c = course(m.courseId), t = topicOf(m);
+  return `<span class="chip">${c ? esc(c.code) : 'Geral'}</span>${t ? `<span>${esc(t.name)}</span>` : ''}<span>${m.min} min</span>`;
+}
+function mCard(m, mode) {
+  const c = course(m.courseId), isDone = m.status === 'done';
+  const late = !isDone && m.status === 'today' && m.planDate && m.planDate < dkey();
+  return `<div class="mc ${isDone ? 'done' : ''}" style="--c:${c ? c.color : '#8b96b5'}">
+    <button class="chk" data-a="${isDone ? 'undo' : 'openDone'}" data-id="${m.id}" aria-label="${isDone ? 'Desfazer' : 'Concluir'}">${isDone ? '✓' : ''}</button>
+    <div class="mb"><div class="mt">${esc(m.title)}</div><div class="ms">${chips(m)}${isDone ? `<span>+${m.xp} XP</span>` : ''}${late ? '<span style="color:var(--bad)">de ontem</span>' : ''}</div></div>
+    ${isDone ? '' : mode === 'bank' ? `<button class="ib" data-a="toToday" data-id="${m.id}" title="Puxar para hoje">→</button>` : `<button class="ib" data-a="toBank" data-id="${m.id}" title="Devolver ao banco">↓</button>`}
+    ${isDone ? '' : `<button class="ib" data-a="delMission" data-id="${m.id}" title="Excluir">✕</button>`}</div>`;
+}
+function vHoje() {
+  const ex = nextExam(), wd = weekDays(), nOn = wd.filter(d => d.on).length, g = S.settings.dailyGoal;
+  const dn = doneOn(dkey()), q = queue(), la = lastActiveDays();
+  let h = '';
+  if (la !== null && la >= 2) h += `<div class="banner"><b>Faz ${la} dias sem missão.</b>Sem drama. Reiniciar custa 15 minutos, não uma semana perfeita.<div style="margin-top:10px"><button class="btn sm" data-a="comeback">Retomar agora (+20 XP)</button></div></div>`;
+  if (ex) { const d = daysUntil(ex.exam); h += `<div class="card exam ${d <= 7 ? 'hot' : ''}"><div class="n">${d}<small>${d === 1 ? 'dia' : 'dias'}</small></div><div><b>${esc(ex.examLabel)} · ${esc(ex.name)}</b><div style="color:var(--mut);font-size:13px">${fmtD(ex.exam)} · ${ex.topics.filter(t => t.status === 2).length}/${ex.topics.length} tópicos dominados</div></div></div>`; }
+  h += `<div class="card" style="margin-top:10px"><div class="hrow"><b>Semana</b><span style="color:var(--mut);font-size:13px">${nOn}/${S.settings.weeklyGoal} dias ativos</span></div><div class="week">${wd.map(d => `<div class="${d.on ? 'on' : ''} ${d.td ? 'td' : ''}">${d.l}<b></b></div>`).join('')}</div></div>`;
+  h += `<h2>Missões de hoje · ${dn.length}/${g}</h2>`;
+  h += q.length ? q.map(m => mCard(m, 'today')).join('') : `<div class="empty">${dn.length >= g ? 'Meta do dia batida. Descanse de verdade.' : 'Nenhuma missão na fila. Puxe do banco ou crie uma.'}</div>`;
+  h += `<div style="margin-top:12px"><button class="btn sec" data-a="newMission" data-dest="today">+ Nova missão</button></div>`;
+  if (dn.length) h += `<h2>Concluídas hoje</h2>` + dn.map(m => mCard(m, 'done')).join('');
+  if (la === null || la < 2) h += `<div style="margin-top:18px;text-align:center"><button class="ib" data-a="comeback" style="font-size:13px">A semana desandou? Retomar em 15 min</button></div>`;
+  return h;
+}
+function vBanco() {
+  const b = bank();
+  if (!b.length) return `<h2>Banco de missões</h2><div class="empty">Vazio. Use a aba Mais para gerar missões com a IA, ou crie manualmente.</div><button class="btn" data-a="newMission" data-dest="bank">+ Nova missão</button>`;
+  let h = `<h2>Banco de missões · ${b.length}</h2>`;
+  S.courses.concat([{ id: null, code: 'Geral', name: '' }]).forEach(c => {
+    const l = b.filter(m => (m.courseId || null) === c.id || (!course(m.courseId) && c.id === null));
+    if (l.length) h += `<div style="font-size:13px;color:var(--mut);margin:14px 0 8px">${esc(c.code)} ${esc(c.name)}</div>` + l.map(m => mCard(m, 'bank')).join('');
+  });
+  return h + `<div style="margin-top:14px"><button class="btn sec" data-a="newMission" data-dest="bank">+ Nova missão</button></div>`;
+}
+function vMaterias() {
+  let h = `<h2>Matérias</h2>`;
+  S.courses.forEach(c => {
+    const ms = done().filter(m => m.courseId === c.id), min = ms.reduce((a, m) => a + m.realMin, 0);
+    const mast = c.topics.filter(t => t.status === 2).length, pct = c.topics.length ? Math.round(mast / c.topics.length * 100) : 0;
+    const d = c.exam ? daysUntil(c.exam) : null, open = openCourse === c.id;
+    h += `<div class="card" style="border-left:4px solid ${c.color}"><div class="hrow" data-a="toggleCourse" data-id="${c.id}" style="cursor:pointer"><div><b>${esc(c.name)}</b><div style="font-size:12px;color:var(--mut)">${esc(c.code)} · ${c.exam ? `${esc(c.examLabel)} em ${fmtD(c.exam)}${d >= 0 ? ` (${d} d)` : ' (passou)'}` : 'sem data de prova'}</div></div><span style="color:var(--mut)">${open ? '▾' : '▸'}</span></div>
+    <div class="bar t"><i style="width:${pct}%"></i></div><div class="kv"><span>${mast}/${c.topics.length} tópicos dominados</span><span>${(min / 60).toFixed(1).replace('.', ',')} h · ${ms.length} missões</span></div>`;
+    if (open) {
+      h += `<div style="margin-top:12px"><div class="row"><div><label style="margin-top:0">Rótulo da prova</label><input data-change="examLabel" data-id="${c.id}" value="${esc(c.examLabel)}"></div><div><label style="margin-top:0">Data</label><input type="date" data-change="examDate" data-id="${c.id}" value="${c.exam}"></div></div>
+      <label>Tópicos (toque no círculo: novo → praticando → dominado)</label>`;
+      h += c.topics.map(t => `<div class="topic"><button class="st s${t.status}" data-a="cycleTopic" data-c="${c.id}" data-id="${t.id}">${['', '◐', '✓'][t.status]}</button><span class="n">${esc(t.name)}</span><button class="ib" data-a="delTopic" data-c="${c.id}" data-id="${t.id}">✕</button></div>`).join('') || '<div class="empty" style="padding:10px">Sem tópicos. Adicione abaixo.</div>';
+      h += `<form data-form="addTopic" data-id="${c.id}" class="row" style="margin-top:8px"><input name="n" placeholder="Novo tópico" required><button class="btn sm" style="flex:none">+</button></form>
+      <div style="margin-top:14px"><button class="btn danger sm" data-a="delCourse" data-id="${c.id}">Remover matéria</button></div></div>`;
+    }
+    h += `</div>`;
+  });
+  return h + `<div style="margin-top:12px"><button class="btn sec" data-a="newCourse">+ Matéria</button></div>`;
+}
+function vLoja() {
+  const bal = totalXP() - spentXP();
+  let h = `<h2>Loja de recompensas</h2><div class="card" style="text-align:center"><div style="font-size:30px;font-weight:800;color:var(--acc)">⚡ ${bal}</div><div style="font-size:13px;color:var(--mut)">XP livres. Gastar XP não reduz seu nível.</div></div><div style="margin-top:10px">`;
+  h += S.rewards.map(r => `<div class="card rw"><div style="flex:1"><b>${esc(r.name)}</b></div><div class="c">${r.cost}</div><button class="btn sm" data-a="buy" data-id="${r.id}" ${bal < r.cost ? 'disabled' : ''}>Resgatar</button><button class="ib" data-a="delReward" data-id="${r.id}">✕</button></div>`).join('');
+  h += `</div><form data-form="addReward" style="margin-top:14px"><div class="row"><input name="n" placeholder="Nova recompensa" required style="flex:2"><input name="c" type="number" min="10" step="10" placeholder="XP" required></div><div style="margin-top:8px"><button class="btn sec">Adicionar recompensa</button></div></form>`;
+  if (S.redeemed.length) h += `<h2>Resgates recentes</h2>` + S.redeemed.slice(-5).reverse().map(r => `<div class="kv" style="margin:6px 0"><span>${esc(r.name)}</span><span>−${r.cost} XP · ${fmtD(dkey(new Date(r.at)))}</span></div>`).join('');
+  return h;
+}
+function buildPrompt() {
+  const today = new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
+  const cs = S.courses.map(c => `- ${c.code} ${c.name}: ${c.exam ? `${c.examLabel} em ${fmtD(c.exam)} (${daysUntil(c.exam)} dias)` : 'sem data de prova definida'}. Tópicos: ${c.topics.length ? c.topics.map(t => `${t.name} [${['novo', 'praticando', 'dominado'][t.status]}]`).join('; ') : 'ainda não cadastrados'}`).join('\n');
+  const lim = new Date(); lim.setDate(lim.getDate() - 7);
+  const rec = done().filter(m => new Date(m.doneAt) >= lim).map(m => `- ${(course(m.courseId) || { code: 'Geral' }).code}: ${m.title} (${m.realMin} min)`).join('\n') || '- nenhuma missão concluída nos últimos 7 dias';
+  return `Você é meu mentor de estudos na Poli/USP. Seja direto e exigente. Hoje é ${today}.
+
+MINHAS MATÉRIAS E PROVAS:
+${cs}
+
+O QUE EU FIZ NOS ÚLTIMOS 7 DIAS:
+${rec}
+
+MEU MÉTODO (siga à risca):
+1. Para cada tópico: explicação bem básica, depois fórmulas principais, depois 1 exemplo passo a passo, depois 3 exercícios básicos.
+2. Nada difícil antes de dominar o básico.
+3. Eu tento resolver antes de ver qualquer resposta.
+4. Treino como se não houvesse calculadora; prefira contas simples.
+5. O nível dos exercícios é o das provas e listas do professor, não mais difícil.
+
+TAREFA: proponha de 5 a 8 missões diárias para o banco de missões. Cada missão tem de 15 a 45 minutos, começa com um verbo, diz o que entregar ao final (critério de pronto) e prioriza as provas mais próximas e os tópicos [novo]. Se eu não tiver cadastrado os tópicos de uma matéria, inclua uma missão para listá-los a partir do material da disciplina.
+
+Responda APENAS com um JSON, sem texto antes ou depois, neste formato:
+[{"titulo":"...","materia":"CÓDIGO","topico":"nome do tópico ou vazio","min":30}]`;
+}
+function vMais() {
+  let h = `<h2>Missões com IA</h2><div class="card"><div style="font-size:14px;color:var(--mut)">1. Copie o prompt. 2. Cole no Claude (ou outra IA). 3. Cole aqui a resposta em JSON. 4. Revise e escolha o que entra no banco.</div><div style="margin-top:12px"><button class="btn" data-a="copyPrompt">Copiar prompt</button></div>
+  <details><summary>Ver o prompt</summary><pre>${esc(buildPrompt())}</pre></details>
+  <label>Resposta da IA (JSON)</label><textarea id="aiIn" placeholder='[{"titulo":"...","materia":"PRO3200","topico":"ANOVA","min":30}]'></textarea>
+  <div style="margin-top:10px"><button class="btn sec" data-a="parseAI">Ler missões</button></div>${aiErr ? `<div class="err">${esc(aiErr)}</div>` : ''}`;
+  if (parsed) {
+    h += `<h2 style="margin-top:20px">Revisão (${parsed.length})</h2>` + parsed.map((p, i) => `<label class="pv" style="margin:0;color:var(--tx);font-size:14px"><input type="checkbox" data-pv="${i}" checked><span>${esc(p.title)}<br><span style="color:var(--mut);font-size:12px">${esc(p.cname || 'Geral')}${p.topic ? ' · ' + esc(p.topic) : ''} · ${p.min} min</span></span></label>`).join('') + `<div style="margin-top:12px"><button class="btn" data-a="addParsed">Adicionar selecionadas ao banco</button></div>`;
+  }
+  h += `</div><h2>Como o XP funciona</h2><div class="card"><ul class="rules" style="margin:0;padding-left:18px"><li><b>1 minuto real = 1 XP.</b> Você informa o tempo que realmente estudou ao concluir. O sistema só vale se você for honesto.</li><li><b>Meta do dia: 3 missões</b> (+30 XP). Mais que isso exige confirmação.</li><li><b>Tópico dominado:</b> +25 XP, uma vez por tópico.</li><li><b>Retomada:</b> missão de 15 min, +20 XP extra.</li><li><b>Semana, não sequência.</b> Sem streak que zera. A meta é ${S.settings.weeklyGoal} dias ativos por semana, começando no domingo.</li><li>O nível sobe com o XP total. Gastar na loja não faz você perder nível.</li></ul></div>
+  <h2>Dados</h2><div class="card"><div style="font-size:14px;color:var(--mut)">Tudo fica salvo só neste aparelho. Faça backup toda semana: se limpar os dados do navegador, o progresso some.</div><div class="row" style="margin-top:12px"><button class="btn sec" data-a="export">Exportar backup</button><button class="btn sec" data-a="importPick">Importar backup</button></div><input type="file" id="imp" accept="application/json" hidden><div style="margin-top:10px"><button class="btn danger sm" data-a="reset">Apagar tudo e recomeçar</button></div></div>`;
+  return h;
+}
+function render() {
+  const keep = { aiIn: ($('#aiIn') || {}).value };
+  const v = { hoje: vHoje, banco: vBanco, materias: vMaterias, loja: vLoja, mais: vMais }[tab]();
+  $('#app').innerHTML = header() + v;
+  $('#nav').innerHTML = TABS.map(t => `<button class="${t[0] === tab ? 'on' : ''}" data-a="tab" data-t="${t[0]}"><span>${t[1]}</span>${t[2]}</button>`).join('');
+  if ($('#aiIn') && keep.aiIn) $('#aiIn').value = keep.aiIn;
+}
+function toast(msg, lv) {
+  const e = document.createElement('div'); e.className = 'toast' + (lv ? ' lv' : ''); e.textContent = msg; document.body.appendChild(e);
+  setTimeout(() => e.remove(), 1500);
+}
+
+/* ---------- folhas (modais) ---------- */
+function openSheet(html) { $('#sheet').innerHTML = `<div class="sheet-bg" data-a="closeSheet"><div class="sheet" onclick="event.stopPropagation()">${html}</div></div>`; const i = $('#sheet input,#sheet select'); if (i && i.type !== 'date') setTimeout(() => i.focus(), 50); }
+function closeSheet() { $('#sheet').innerHTML = ''; }
+function courseOpts(sel) { return `<option value="">Geral</option>` + S.courses.map(c => `<option value="${c.id}" ${c.id === sel ? 'selected' : ''}>${esc(c.code)} · ${esc(c.name)}</option>`).join(''); }
+function topicOpts(cid) { const c = course(cid); return `<option value="">(sem tópico)</option>` + (c ? c.topics.map(t => `<option value="${t.id}">${esc(t.name)}</option>`).join('') : ''); }
+function sheetMission(dest) {
+  const first = nextExam() || S.courses[0];
+  openSheet(`<h3>Nova missão</h3><div style="font-size:13px;color:var(--mut)">Verbo + objeto + critério de pronto. Ex.: "Resolver 3 exercícios básicos de ANOVA sem consultar".</div>
+  <form data-form="saveMission"><label>O que fazer</label><input name="title" required maxlength="140">
+  <div class="row"><div><label>Matéria</label><select name="course" data-change="missionCourse">${courseOpts(first && first.id)}</select></div><div><label>Tópico</label><select name="topic" id="mTopic">${topicOpts(first && first.id)}</select></div></div>
+  <div class="row"><div><label>Minutos</label><input name="min" type="number" min="5" max="120" step="5" value="30" required></div><div><label>Vai para</label><select name="dest"><option value="today" ${dest === 'today' ? 'selected' : ''}>Hoje</option><option value="bank" ${dest === 'bank' ? 'selected' : ''}>Banco</option></select></div></div>
+  <div style="margin-top:16px"><button class="btn">Criar missão</button></div></form>`);
+}
+function sheetDone(id) {
+  const m = S.missions.find(x => x.id === id);
+  openSheet(`<h3>Concluir missão</h3><div style="color:var(--mut);font-size:14px;margin-bottom:4px">${esc(m.title)}</div>
+  <form data-form="doneMission" data-id="${id}"><label>Quantos minutos reais você estudou?</label><input name="min" type="number" min="1" max="240" value="${m.min}" required style="font-size:24px;text-align:center"><div style="margin-top:16px"><button class="btn">Concluir e ganhar XP</button></div></form>`);
+}
+function sheetCourse() {
+  openSheet(`<h3>Nova matéria</h3><form data-form="saveCourse"><label>Código</label><input name="code" required maxlength="10" placeholder="PME0101"><label>Nome</label><input name="name" required maxlength="50" placeholder="Estática"><label>Data da prova (opcional)</label><input name="exam" type="date"><div style="margin-top:16px"><button class="btn">Adicionar</button></div></form>`);
+}
+
+/* ---------- eventos ---------- */
+const COLORS = ['#5eead4', '#fbbf24', '#a78bfa', '#fb7185', '#60a5fa', '#4ade80', '#f472b6', '#fb923c'];
+const A = {
+  tab: d => { tab = d.t; render(); window.scrollTo(0, 0); },
+  closeSheet: () => closeSheet(),
+  newMission: d => sheetMission(d.dest),
+  openDone: d => sheetDone(d.id),
+  undo: d => undoMission(d.id),
+  toToday: d => sendToToday(d.id),
+  toBank: d => { const m = S.missions.find(x => x.id === d.id); m.status = 'backlog'; m.planDate = null; save(); render(); },
+  delMission: d => { if (confirm('Excluir esta missão?')) { S.missions = S.missions.filter(x => x.id !== d.id); save(); render(); } },
+  comeback: () => startComeback(),
+  toggleCourse: d => { openCourse = openCourse === d.id ? null : d.id; render(); },
+  cycleTopic: d => {
+    const t = course(d.c).topics.find(x => x.id === d.id); t.status = (t.status + 1) % 3;
+    if (t.status === 2 && addBonus('mastery-' + t.id, 'Tópico dominado', 25)) toast('+25 XP · tópico dominado');
+    save(); render();
+  },
+  delTopic: d => { const c = course(d.c); c.topics = c.topics.filter(x => x.id !== d.id); S.missions.forEach(m => { if (m.topicId === d.id) m.topicId = null; }); save(); render(); },
+  delCourse: d => { if (confirm('Remover a matéria? As missões dela ficam como "Geral".')) { S.missions.forEach(m => { if (m.courseId === d.id) { m.courseId = null; m.topicId = null; } }); S.courses = S.courses.filter(c => c.id !== d.id); openCourse = null; save(); render(); } },
+  newCourse: () => sheetCourse(),
+  buy: d => { const r = S.rewards.find(x => x.id === d.id); if (totalXP() - spentXP() < r.cost) return; if (confirm(`Resgatar "${r.name}" por ${r.cost} XP?`)) { S.redeemed.push({ id: uid(), name: r.name, cost: r.cost, at: new Date().toISOString() }); save(); render(); toast('Aproveite, de verdade.'); } },
+  delReward: d => { S.rewards = S.rewards.filter(x => x.id !== d.id); save(); render(); },
+  copyPrompt: async () => { const t = buildPrompt(); try { await navigator.clipboard.writeText(t); toast('Prompt copiado'); } catch (e) { const d = document.querySelector('details'); if (d) d.open = true; toast('Copie manualmente o texto abaixo'); } },
+  parseAI: () => {
+    aiErr = ''; parsed = null;
+    try {
+      const txt = $('#aiIn').value, a = txt.indexOf('['), b = txt.lastIndexOf(']');
+      if (a < 0 || b < a) throw new Error('Não encontrei uma lista JSON ([ ... ]) no texto colado.');
+      const arr = JSON.parse(txt.slice(a, b + 1));
+      parsed = arr.map(o => {
+        const cm = matchCourse(String(o.materia || o.course || ''));
+        return { title: String(o.titulo || o.title || '').trim(), courseId: cm ? cm.id : null, cname: cm ? cm.code : String(o.materia || o.course || ''), topic: String(o.topico || o.topic || '').trim(), min: Math.min(120, Math.max(5, parseInt(o.min || o.minutos || o.minutes, 10) || 30)) };
+      }).filter(p => p.title);
+      if (!parsed.length) throw new Error('A lista veio vazia ou sem títulos.');
+    } catch (e) { aiErr = 'Não consegui ler: ' + e.message; }
+    render();
+  },
+  addParsed: () => {
+    let n = 0;
+    $$('[data-pv]').forEach(cb => {
+      if (!cb.checked) return; const p = parsed[+cb.dataset.pv]; let tid = null;
+      const c = course(p.courseId);
+      if (c && p.topic) { let t = c.topics.find(x => x.name.toLowerCase() === p.topic.toLowerCase()); if (!t) { t = { id: uid(), name: p.topic, status: 0 }; c.topics.push(t); } tid = t.id; }
+      S.missions.push({ id: uid(), title: p.title, courseId: p.courseId, topicId: tid, min: p.min, status: 'backlog', planDate: null, doneAt: null, realMin: 0, xp: 0 }); n++;
+    });
+    parsed = null; save(); tab = 'banco'; render(); toast(`${n} missões no banco`);
+  },
+  export: () => {
+    const blob = new Blob([JSON.stringify(S, null, 1)], { type: 'application/json' }), a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = `meta-backup-${dkey()}.json`; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  },
+  importPick: () => $('#imp').click(),
+  reset: () => { if (confirm('Apagar TODO o progresso? Isso não pode ser desfeito.') && confirm('Tem certeza? Exporte um backup antes se houver dúvida.')) { S = seed(); save(); tab = 'hoje'; render(); } }
+};
+function $$(s) { return [...document.querySelectorAll(s)]; }
+function matchCourse(s) {
+  s = s.trim().toLowerCase(); if (!s) return null;
+  return S.courses.find(c => c.code.toLowerCase() === s || c.name.toLowerCase() === s) || S.courses.find(c => s.includes(c.code.toLowerCase()) || c.name.toLowerCase().includes(s)) || null;
+}
+document.addEventListener('click', e => { const t = e.target.closest('[data-a]'); if (t && A[t.dataset.a]) { e.preventDefault(); A[t.dataset.a](t.dataset, t); } });
+document.addEventListener('change', e => {
+  const t = e.target;
+  if (t.id === 'imp') {
+    const f = t.files[0]; if (!f) return; const r = new FileReader();
+    r.onload = () => { try { const s = JSON.parse(r.result); if (s.v !== 1 || !Array.isArray(s.courses) || !Array.isArray(s.missions)) throw 0; S = s; save(); render(); toast('Backup importado'); } catch (x) { toast('Arquivo inválido'); } };
+    r.readAsText(f); t.value = ''; return;
+  }
+  const k = t.dataset.change; if (!k) return;
+  if (k === 'examDate') { course(t.dataset.id).exam = t.value; save(); render(); }
+  if (k === 'examLabel') { course(t.dataset.id).examLabel = t.value.trim() || 'Prova'; save(); render(); }
+  if (k === 'missionCourse') $('#mTopic').innerHTML = topicOpts(t.value);
+});
+document.addEventListener('submit', e => {
+  const f = e.target, k = f.dataset.form; if (!k) return; e.preventDefault();
+  const fd = new FormData(f), v = n => (fd.get(n) || '').toString().trim();
+  if (k === 'saveMission') {
+    const dest = v('dest');
+    if (dest === 'today' && slotsUsed() >= S.settings.dailyGoal && !confirm(`Você já tem ${S.settings.dailyGoal} missões hoje. Missão demais vira missão nenhuma. Adicionar mesmo assim?`)) return;
+    S.missions.push({ id: uid(), title: v('title'), courseId: v('course') || null, topicId: v('topic') || null, min: Math.max(5, parseInt(v('min'), 10) || 30), status: dest === 'today' ? 'today' : 'backlog', planDate: dest === 'today' ? dkey() : null, doneAt: null, realMin: 0, xp: 0 });
+    save(); closeSheet(); render();
+  }
+  if (k === 'doneMission') { const mins = Math.min(240, Math.max(1, parseInt(v('min'), 10) || 1)); closeSheet(); completeMission(f.dataset.id, mins); }
+  if (k === 'saveCourse') {
+    S.courses.push({ id: uid(), code: v('code').toUpperCase(), name: v('name'), exam: v('exam'), examLabel: 'Prova', color: COLORS[S.courses.length % COLORS.length], topics: [] });
+    save(); closeSheet(); render();
+  }
+  if (k === 'addTopic') { course(f.dataset.id).topics.push({ id: uid(), name: v('n'), status: 0 }); save(); render(); }
+  if (k === 'addReward') { S.rewards.push({ id: uid(), name: v('n'), cost: Math.max(10, parseInt(v('c'), 10) || 100) }); save(); render(); }
+});
+
+render();
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
+</script>
+</body>
+</html>

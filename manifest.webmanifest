@@ -1,0 +1,17 @@
+{
+  "name": "META — Poli",
+  "short_name": "META",
+  "description": "Missões diárias, XP e recompensas para estudar para as provas.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0e1320",
+  "theme_color": "#0e1320",
+  "lang": "pt-BR",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
